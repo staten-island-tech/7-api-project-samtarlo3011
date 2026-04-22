@@ -1,22 +1,45 @@
+from logging import info
 import tkinter as tk
-def message_rev():
-    root = tk.Tk()
-    root.title("Message Reverser")
-    root.geometry("400x200")
+import requests
 
-    def reverse_message():
-        message = entry.get()
-        reversed_message = message[::-1]
-        result_label.config(text=f"Reversed Message: {reversed_message}")
-
-    entry = tk.Entry(root, width=30)
+def book_info():
+    book = tk.Tk()
+    book.title("Book Info")
+    book.geometry("4000x3000")
+    entry = tk.Entry(book, width=30)
     entry.pack(pady=10)
-
-    reverse_button = tk.Button(root, text="Reverse", command=reverse_message)
-    reverse_button.pack(pady=5)
-
-    result_label = tk.Label(root, text="")
-    result_label.pack(pady=10)
-
-    root.mainloop()
-message_rev()
+    def getbook():
+        title = entry.get()
+        response = requests.get(f"https://gutendex.com/books?search={title}")
+        data = response.json()
+        if int(data["count"]) > 1:
+            select = tk.Tk()
+            select.title("Select Book")
+            select.geometry("400x300")
+            instruct = tk.Label(select, text="Multiple books found. Please select one:")
+            instruct.pack(pady=5)
+            def select():
+                for i in data["results"]:
+                    id = i["id"]
+                    return id
+            for i in data["results"]:
+                button = tk.Button(select, text=i["title"], command=)
+                button.pack(pady=5)
+    title_label = tk.Label(book, text=f"Title: ")
+    title_label.pack(pady=5)
+    author_label = tk.Label(book, text=f"Author: ")
+    author_label.pack(pady=5)
+    summary_label = tk.Label(book, text=f"Summary: ", wraplength=350)
+    summary_label.pack(pady=5)
+    def labels():
+        info = getbook()
+        if info:
+            title_label.config(text=f"Title: {info['results'][id]['title']}")
+            author_label.config(text=f"Author: {info['results'][id]['authors'][0]['name']}")
+            summary_label.config(text=f"Summary: {info['results'][id]['summaries']}")
+        else:
+            print("Book not found.")
+    search = tk.Button(book, text="Search", command=labels)
+    search.pack(pady=10)
+    book.mainloop()
+book_info()
