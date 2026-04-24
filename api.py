@@ -19,14 +19,30 @@ def book_info():
         data = getinfo()
         select = tk.Toplevel()
         select.title("Select Book")
-        select.geometry("400x300")
+        select.geometry("4000x3000")
         instruct = tk.Label(select, text="Multiple books found. Please select one:")
-        instruct.pack(pady=5)
+        instruct.grid(row=0, column=0, padx=5, pady=5)
         "creates new gui to select book if multiple books are found"
+        def next_page():
+            nonlocal data 
+            response = requests.get(data["next"])
+            data = response.json()
+            for widget in select.winfo_children():
+                widget.destroy()
+            selectB()
         def selectB():
+            r = 1
+            c = 1
             for i in data["results"]:
-                button = tk.Button(select, text=i["title"], command=lambda b=i: labels(b))
-                button.pack(pady=5)
+                button = tk.Button(select, text=i["title"], command=lambda b=i: [labels(b), select.destroy()])
+                button.grid(row=r, column=c, padx=5, pady=5)
+                r += 1
+                if r > 20:
+                    r = 1
+                    c += 1
+            if data.get("next"):
+                next_button = tk.Button(select, text="Next", command=next_page )
+                next_button.grid(row=r, column=c, padx=5, pady=5)
         selectB()
     title_label = tk.Label(book, text=f"Title: ")
     title_label.pack(pady=5)
