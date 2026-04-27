@@ -34,7 +34,7 @@ def book_info():
             r = 1
             c = 1
             for i in data["results"]:
-                button = tk.Button(select, text=i["title"], command=lambda b=i: [labels(b), select.destroy()])
+                button = tk.Button(select, text=i["title"],wraplength=300, command=lambda b=i: [labels(b), select.destroy()])
                 button.grid(row=r, column=c, padx=5, pady=5)
                 r += 1
                 if r > 20:
@@ -44,9 +44,9 @@ def book_info():
                 next_button = tk.Button(select, text="Next", command=next_page )
                 next_button.grid(row=r, column=c, padx=5, pady=5)
         selectB()
-    title_label = tk.Label(book, text=f"Title: ")
+    title_label = tk.Label(book, text=f"Title: ", wraplength=300)
     title_label.pack(pady=5)
-    author_label = tk.Label(book, text=f"Author: ")
+    author_label = tk.Label(book, text=f"Author: ", wraplength=300)
     author_label.pack(pady=5)
     summary_label = tk.Label(book, text=f"Summary: ", wraplength=350)
     summary_label.pack(pady=5)
